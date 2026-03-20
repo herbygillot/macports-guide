@@ -2,8 +2,6 @@ name: "Build & deploy MacPorts Guide"
 
 on:
   push:
-    branches:
-      - master
 
 permissions:
   contents: read
@@ -40,7 +38,7 @@ jobs:
           sudo /opt/local/bin/port install docbook-xml-5.0 docbook-xsl-ns libxml2 libxslt rsync
           echo "Done installing dependencies."
 
-      - name: Build Guide
+      - name: Validate and build Guide
         run: |
           set -eu
 
@@ -51,6 +49,7 @@ jobs:
           echo "Done building Guide."
 
       - name: Deploy Guide
+        if: github.repository == 'macports/macports-guide' && github.ref == 'refs/heads/master'
         env:
           GUIDE_SSH_HOST: ${{ secrets.GUIDE_SSH_HOST }}
           GUIDE_SSH_HOSTKEY: ${{ secrets.GUIDE_SSH_HOSTKEY }}
